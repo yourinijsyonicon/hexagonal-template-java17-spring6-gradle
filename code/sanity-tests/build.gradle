@@ -1,0 +1,53 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+shadowJar {
+    manifest {
+        attributes 'Main-Class': 'be.yonicon.template.sanity.SanityTestApplication'
+    }
+}
+
+jar {
+    enabled = false
+}
+
+dependencies {
+    implementation 'ch.qos.logback:logback-classic'
+    implementation 'org.springframework:spring-web'
+    implementation 'org.junit.jupiter:junit-jupiter-engine'
+    implementation 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'org.xmlunit:xmlunit-core'
+    implementation 'org.xmlunit:xmlunit-assertj'
+    implementation 'net.bytebuddy:byte-buddy'
+}
+
+description = 'sanity-tests'
+
+def dockerBuildName = 'hexagonal-template-java17-spring6-sanity'
+tasks.register('copyJarToDockerDir', Copy) {
+    from "$buildDir/libs"
+    include "**/*.jar"
+    into "$buildDir/docker"
+}
+
+tasks.register('copyDockerfileToDockerDir', Copy) {
+    from "$projectDir/src/main/docker"
+    include "**/*"
+    into "$buildDir/docker"
+}
+
+tasks.register('buildDockerImage', Exec) {
+    workingDir "$buildDir"
+    commandLine "podman", "build", "-t", "yonicon/${dockerBuildName}:${project.version}", "docker"
+}
+
+tasks.register('pushDockerImage', Exec) {
+    commandLine "podman", "push", "yonicon/${dockerBuildName}:${project.version}"
+}
+
+copyJarToDockerDir.dependsOn shadowJar
+buildDockerImage.dependsOn copyJarToDockerDir
+buildDockerImage.dependsOn copyDockerfileToDockerDir
+pushDockerImage.dependsOn buildDockerImage

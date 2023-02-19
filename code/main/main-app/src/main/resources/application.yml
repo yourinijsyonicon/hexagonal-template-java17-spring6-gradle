@@ -1,0 +1,37 @@
+be.yonicon.template:
+  infra:
+    security:
+      enabled: true
+    customer:
+      backend: inmem
+
+server:
+  port: 8080
+
+management:
+  info:
+    git:
+      mode: full
+  server:
+    port: 8081
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  #security:
+  # fill in security details ...
+  main:
+    banner-mode: off
+    allow-bean-definition-overriding: true
+
+logging.level:
+  root: INFO
+  be.yonicon.template: INFO
+  org.springframework: WARN
+
+app.version: "${version}"

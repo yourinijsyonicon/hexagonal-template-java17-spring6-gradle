@@ -1,0 +1,98 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.0"
+    }
+}
+
+plugins {
+    id "org.sonarqube" version "4.0.0.2929"
+    id "org.owasp.dependencycheck" version "8.1.0"
+    id "jacoco"
+}
+
+tasks.register('printVersion') {
+    doLast {
+        println project.version
+    }
+}
+
+def jacocoExclusion = ["**/be/yonicon/hexagonal/rdbms/jooq/**",
+                       "**/be/yonicon/hexagonal/test/**",
+                       "**/be/yonicon/hexagonal/sanity/**",
+                       "**/be/yonicon/hexagonal/**/config/**"]
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    group = 'be.yonicon.template-java17-spring6-gradle'
+    version = System.getenv('CI_COMMIT_SHORT_SHA') != null ? System.getenv('CI_COMMIT_SHORT_SHA').substring(0, 7) : 'local'
+}
+
+subprojects {
+    apply plugin: 'maven-publish'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from(components.java)
+            }
+        }
+    }
+
+    tasks.named("test") {
+        useJUnitPlatform {
+            excludeTags "slow-test"
+        }
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+        jacoco {
+            excludes = jacocoExclusion
+        }
+    }
+
+    tasks.register("slowTest", Test) {
+        useJUnitPlatform {
+            includeTags "slow-test"
+        }
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+        jacoco {
+            excludes = jacocoExclusion
+        }
+        shouldRunAfter test
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom 'org.springframework.boot:spring-boot-dependencies:3.0.2'
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.1"
+        }
+        dependencies {
+            dependency 'io.micrometer:micrometer-tracing-bridge-otel:1.0.2'
+            dependency 'net.logstash.logback:logstash-logback-encoder:7.2'
+            dependency 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+        }
+    }
+
+    dependencies {
+        implementation 'org.slf4j:slf4j-api'
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testImplementation 'org.assertj:assertj-core'
+    }
+}

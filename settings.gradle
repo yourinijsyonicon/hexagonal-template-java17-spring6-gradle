@@ -1,0 +1,36 @@
+rootProject.name = 'template-java17-spring6-gradle'
+
+include(':in-memory-adapter')
+include(':rdbms-adapter')
+
+include(':rest-adapter')
+include(':acceptance-tests')
+
+include(':vocabulary')
+include(':application-api')
+include(':domain')
+include(':use-cases')
+include(':queries')
+
+include(':main-app')
+include(':main-boot')
+include(':sanity-tests')
+include(':test-doubles')
+
+project(":in-memory-adapter").projectDir = file('code/infra/backend-adapters/in-memory-adapter')
+project(":rdbms-adapter").projectDir = file('code/infra/backend-adapters/rdbms-adapter')
+
+project(":rest-adapter").projectDir = file('code/infra/frontend-adapters/rest-adapter')
+project(":acceptance-tests").projectDir = file('code/infra/frontend-adapters/acceptance-tests')
+
+project(":vocabulary").projectDir = file('code/vocabulary')
+project(":application-api").projectDir = file('code/application/application-api')
+project(":domain").projectDir = file('code/application/domain')
+project(":use-cases").projectDir = file('code/application/use-cases')
+project(":queries").projectDir = file('code/application/queries')
+
+project(":main-app").projectDir = file('code/main/main-app')
+project(":main-boot").projectDir = file('code/main/main-boot')
+project(":sanity-tests").projectDir = file('code/sanity-tests')
+
+project(":test-doubles").projectDir = file('code/test-doubles')

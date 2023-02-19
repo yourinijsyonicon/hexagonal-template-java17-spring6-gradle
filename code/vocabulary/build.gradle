@@ -1,0 +1,9 @@
+plugins {
+    id "io.freefair.lombok" version "6.6.2"
+}
+
+dependencies {
+    testImplementation project(":test-doubles")
+}
+
+description = 'vocabulary'

@@ -1,0 +1,59 @@
+plugins {
+    id "org.springframework.boot" version "3.0.2"
+    id "com.gorylenko.gradle-git-properties" version "2.4.1"
+    id 'java'
+}
+
+jar {
+    enabled = false
+}
+
+springBoot {
+    buildInfo()
+}
+
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+    implementation project(':main-app')
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'net.logstash.logback:logstash-logback-encoder'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+}
+
+description = 'main-boot'
+
+def dockerBuildName = 'hexagonal-template-java17-spring6'
+tasks.register('copyJarToDockerDir', Copy) {
+    from "$buildDir/libs"
+    include "**/*.jar"
+    into "$buildDir/docker"
+}
+
+tasks.register('copyDockerfileToDockerDir', Copy) {
+    from "$projectDir/src/main/docker"
+    include "**/*"
+    into "$buildDir/docker"
+}
+
+tasks.register('buildDockerImage', Exec) {
+    workingDir "$buildDir"
+    commandLine "podman", "build", "-t", "yonicon/${dockerBuildName}:${project.version}", "docker"
+}
+
+tasks.register('pushDockerImage', Exec) {
+    commandLine "podman", "push", "yonicon/${dockerBuildName}:${project.version}"
+}
+
+copyJarToDockerDir.dependsOn build
+buildDockerImage.dependsOn copyJarToDockerDir
+buildDockerImage.dependsOn copyDockerfileToDockerDir
+pushDockerImage.dependsOn buildDockerImage
