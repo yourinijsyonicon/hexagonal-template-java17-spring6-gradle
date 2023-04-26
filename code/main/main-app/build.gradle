@@ -17,8 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    compileOnly 'javax.servlet:javax.servlet-api:4.0.1' // todo migrate to jakarta dependency
-
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
 }
 

@@ -9,19 +9,19 @@ import org.hibernate.validator.constraints.Length;
 @Valid
 public class CustomerContentRequest {
     @NotBlank(message = "Please provide The Commercial Name")
-    @Schema(name = "Commercial Name", requiredMode = Schema.RequiredMode.REQUIRED, description = "The Commercial Name of our Customer")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "The Commercial Name of our Customer")
     private String commercialName;
 
     @NotBlank(message = "Please provide the Legal Name")
-    @Schema(name = "Legal Name", description = "The Legal Name of our Customer")
+    @Schema(description = "The Legal Name of our Customer")
     private String legalName;
 
     @NotBlank(message = "Please provide the Contact Person")
-    @Schema(name = "Contact Person", description = "The Contact Person of our customer")
+    @Schema(description = "The Contact Person of our customer")
     private String contactPerson;
 
     @Length(min = 10, max = 10, message = "The Vat number needs to be 10 characters long")
-    @Schema(name = "Vat Number", requiredMode = Schema.RequiredMode.REQUIRED, description = "The VAT number of our customer, format is without symbols (f.e. 0123456789)")
+    @Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "The VAT number of our customer, format is without symbols (f.e. 0123456789)")
     private String vatNr;
 
     public CustomerContentRequest() {
