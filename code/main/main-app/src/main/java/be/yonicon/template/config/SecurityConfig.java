@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 // squid:S1118 : constructor needed for Spring Configuration
@@ -22,8 +23,8 @@ public class SecurityConfig {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http.authorizeHttpRequests().anyRequest().permitAll();
-            return http.build();
+            return http.authorizeHttpRequests(x -> x.anyRequest().permitAll())
+                    .build();
         }
 
         @Bean
@@ -39,9 +40,10 @@ public class SecurityConfig {
 
         @Bean
         public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            // TODO implement security if required.
-            http.csrf().disable().authorizeHttpRequests().anyRequest().authenticated();
-            return http.build();
+            return http
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(x -> x.anyRequest().authenticated())
+                    .build();
         }
 
         @Bean
