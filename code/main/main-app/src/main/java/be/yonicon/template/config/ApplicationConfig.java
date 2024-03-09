@@ -1,20 +1,17 @@
 package be.yonicon.template.config;
 
-import be.yonicon.template.config.properties.InfraProperties;
-import be.yonicon.template.customer.CreateCustomer;
-import be.yonicon.template.customer.DeleteCustomer;
-import be.yonicon.template.customer.GetCustomer;
-import be.yonicon.template.customer.ListCustomer;
-import be.yonicon.template.customer.UpdateCustomer;
+import be.yonicon.template.customer.*;
 import be.yonicon.template.domain.DomainEventPublisher;
 import be.yonicon.template.domain.customer.CustomerFactory;
 import be.yonicon.template.domain.customer.CustomerRepository;
+import be.yonicon.template.inmem.InMemoryCustomerRepository;
 import be.yonicon.template.query.customer.CustomersArchive;
 import be.yonicon.template.query.customer.GetCustomerQuery;
 import be.yonicon.template.query.customer.ListCustomersQuery;
 import be.yonicon.template.usecase.customer.create.CreateCustomerUseCase;
 import be.yonicon.template.usecase.customer.delete.DeleteCustomerUseCase;
 import be.yonicon.template.usecase.customer.update.UpdateCustomerUseCase;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,21 +19,9 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 
     @Bean
-    CustomerRepository customerRepository(InfraProperties properties) {
-        if (properties.isCustomerInMemorySet()) {
-            return InMemorySetup.inMemoryCustomerRepository();
-        }
-
-        throw new IllegalStateException("Customer Repository is required.");
-    }
-
-    @Bean
-    CustomersArchive customersArchive(InfraProperties properties) {
-        if (properties.isCustomerInMemorySet()) {
-            return InMemorySetup.inMemoryCustomerRepository();
-        }
-
-        throw new IllegalStateException("Customers Archive is required.");
+    @ConditionalOnProperty(value = "be.yonicon.template.infra.customer.backend", havingValue = "inmem")
+    InMemoryCustomerRepository inMemoryCustomerRepository() {
+        return InMemorySetup.inMemoryCustomerRepository();
     }
 
     @Bean

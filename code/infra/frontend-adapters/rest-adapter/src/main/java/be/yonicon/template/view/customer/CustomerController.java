@@ -56,7 +56,7 @@ public class CustomerController implements CustomerRestApi {
     }
 
     @GetMapping(value = "/customer/{customerId}", produces = "application/json")
-    public CustomerContentResponse getCustomer(@PathVariable final String customerId) {
+    public CustomerContentResponse getCustomer(@PathVariable("customerId") final String customerId) {
         return ofNullable(customerId)
                 .map(CustomerId::from)
                 .map(getCustomer::getCustomer)
@@ -73,14 +73,14 @@ public class CustomerController implements CustomerRestApi {
     }
 
     @PutMapping(value = "/customer/{customerId}", consumes = "application/json")
-    public void updateCustomer(@PathVariable final String customerId, @Valid @RequestBody final CustomerContentRequest customerContent) {
+    public void updateCustomer(@PathVariable("customerId") final String customerId, @Valid @RequestBody final CustomerContentRequest customerContent) {
         ofNullable(customerContent)
                 .map(CustomerContentRequestMapper::map)
                 .ifPresent(it -> updateCustomer.update(toCustomerId(customerId), it, new RestUpdateCustomerPresenter()));
     }
 
     @DeleteMapping("/customer/{customerId}")
-    public void deleteCustomer(@PathVariable final String customerId) {
+    public void deleteCustomer(@PathVariable("customerId") final String customerId) {
         deleteCustomer.delete(
                 toCustomerId(customerId),
                 new RestDeleteCustomerPresenter());
