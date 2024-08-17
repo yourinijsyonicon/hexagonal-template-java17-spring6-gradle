@@ -1,5 +1,6 @@
 package be.yonicon.template.config;
 
+import be.yonicon.template.config.properties.InfraProperties;
 import be.yonicon.template.customer.*;
 import be.yonicon.template.domain.DomainEventPublisher;
 import be.yonicon.template.domain.customer.CustomerFactory;
@@ -12,10 +13,12 @@ import be.yonicon.template.usecase.customer.create.CreateCustomerUseCase;
 import be.yonicon.template.usecase.customer.delete.DeleteCustomerUseCase;
 import be.yonicon.template.usecase.customer.update.UpdateCustomerUseCase;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@EnableConfigurationProperties({InfraProperties.class})
 public class ApplicationConfig {
 
     @Bean

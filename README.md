@@ -1,8 +1,8 @@
 # Hexagonal Template
 
-Can be used as a starting point for ports and adapters or hexaginal architecture based applications.
+This is a very limited base setup for a hexagonal structured application architecture with Spring 6 (Spring Boot 3), java 21 and gradle.
 
-It is free to use.
+This setup is free to use. Other tutorials, guides, workshops and training material is available. For more info, contact me at [Web](https://yourinijsyonicon.github.io/) or [LinkedIn](https://www.linkedin.com/in/youri-nijs-yonicon/)
  
 ## Build
 run `gradle build`
@@ -17,11 +17,4 @@ Swagger UI available at :
 http://localhost:8080/swagger-ui/index.html
 
 ## Links
-...
-
-## Remarks
-#### Properties Constructor binding is not working:
-* https://docs.spring.io/spring-boot/docs/3.0.3-SNAPSHOT/reference/htmlsingle/#native-image.advanced.nested-configuration-properties (see note)
-  * _Please use public getters and setters in all cases, otherwise the properties will not be bindable._
-* https://github.com/spring-projects/spring-boot/issues/33409
-* https://github.com/spring-projects/spring-boot/issues/32765
+... (contact me for more info)
