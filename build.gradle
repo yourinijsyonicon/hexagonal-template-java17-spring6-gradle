@@ -10,14 +10,10 @@ buildscript {
 }
 
 plugins {
-    id "jacoco"
-    id "org.sonarqube" version "5.1.0.4882"
-    id "org.owasp.dependencycheck" version "10.0.3"
-
-    id "org.springframework.boot" version "3.3.2" apply false
-    id "com.gorylenko.gradle-git-properties" version "2.4.1" apply false
+    id "org.springframework.boot" version "3.4.3" apply false
+    id "com.gorylenko.gradle-git-properties" version "2.5.0" apply false
     id "com.github.johnrengelman.shadow" version "8.1.1" apply false
-    id "io.freefair.lombok" version "8.7.1" apply false
+    id "io.freefair.lombok" version "8.13" apply false
 }
 
 tasks.register('printVersion') {
@@ -25,11 +21,6 @@ tasks.register('printVersion') {
         println project.version
     }
 }
-
-def jacocoExclusion = ["**/be/yonicon/hexagonal/rdbms/jooq/**",
-                       "**/be/yonicon/hexagonal/test/**",
-                       "**/be/yonicon/hexagonal/sanity/**",
-                       "**/be/yonicon/hexagonal/**/config/**"]
 
 allprojects {
     repositories {
@@ -65,9 +56,6 @@ subprojects {
         testLogging {
             events "passed", "skipped", "failed"
         }
-        jacoco {
-            excludes = jacocoExclusion
-        }
     }
 
     tasks.register("slowTest", Test) {
@@ -77,21 +65,18 @@ subprojects {
         testLogging {
             events "passed", "skipped", "failed"
         }
-        jacoco {
-            excludes = jacocoExclusion
-        }
         shouldRunAfter test
     }
 
     dependencyManagement {
         imports {
-            mavenBom 'org.springframework.boot:spring-boot-dependencies:3.3.2'
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.3"
+            mavenBom 'org.springframework.boot:spring-boot-dependencies:3.4.3'
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.1"
         }
         dependencies {
-            dependency 'io.micrometer:micrometer-tracing-bridge-otel:1.3.3'
+            dependency 'io.micrometer:micrometer-tracing-bridge-otel:1.4.4'
             dependency 'net.logstash.logback:logstash-logback-encoder:8.0'
-            dependency 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+            dependency 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
         }
     }
 
